@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <div class="col-sm-6 col-sm-offset-3">
+    <h1>{{ titulo }}</h1>
+
+    <form action="" method="GET">
+        <input type="text" name="q" placeholder="Buscar posts" value="{{ request.GET.q }}">
+        <input type="submit" value="Buscar">
+    </form>
+      
+    {% for obj in object_list %}
+    <div class="row">  
+          <div class="col-sm-12">
+            <div class="thumbnail">
+                {% if obj.imagenes %}    
+                    <img src="{{ obj.imagenes.url }}" class="img-responsive"/>
+                {% endif %}    
+              <div class="caption">
+                {% if obj.draft %} <h3>DRAFT</h3> {% endif %} {% if obj.publish > hoy %} <h3>FUTURE POST</h3> {%  endif %}
+                <h3><a href="{{ obj.get_absolute_url }}">{{ obj.titulo }}</a> <small>{{ obj.publish }}</small> </h3>
+
+                {% if obj.user.get_full_name %}
+                    <p>Autor: {{ obj.user.get_full_name }}</p>
+                {% else %}  
+                    <p>Autor: {{ obj.user }}</p>
+                {% endif %}
+
+                <p>{{ obj.contenido|linebreaks|truncatechars:120 }}</p>
+                <p><a href="{{ obj.get_absolute_url }}" class="btn btn-primary" role="button">Ver</a> 
+              </div>
+            </div>
+          </div>
+    </div>    
+    {% endfor %}
+    
+    
+    <div class="pagination">
+        <span class="step-links">
+            {% if object_list.has_previous %}
+                <a href="?{{ page_request_var }}={{ object_list.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Anterior</a>
+            {% endif %}
+
+            <span class="current">
+                Pag, {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+            </span>
+
+            {% if object_list.has_next %}
+                <a href="?{{ page_request_var }}={{ object_list.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">Siguiente</a>
+            {% endif %}
+        </span>
+    </div>
+    
+    
+    </div>
+    
+{% endblock %}
+
+
+

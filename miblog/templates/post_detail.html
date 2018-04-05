@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load urlify %}
+        
+{% block head_title %}{{ instance.titulo }} | {{ block.super }}{% endblock %}   
+
+<style>
+    {% block style %}
+        h1{
+            color: green;
+        }
+    {% endblock %}
+</style>     
+{% block content %}
+    <div class="col-sm-6 col-sm-offset-3 ">
+        {% if instance.imagenes %} 
+        <img src="{{ instance.imagenes.url }}" class="img-responsive"/>
+        {% endif %}
+        <h1>{{ titulo }} <small>{% if instance.draft %} <span style="color:red;">DRAFT</span>{% endif %} {{ instance.timestamp }}</small> </h1><br>
+
+
+       
+        {% if instance.user.get_full_name %}
+            <p>Autor: {{ instance.user.get_full_name }}</p>
+        {% else %}  
+            <p>Autor: {{ instance.user }}</p>
+        {% endif %}
+
+    <!-- 
+        {{ share_string }}<br> 
+        {{ instance.titulo|truncatechars:10|urlify }}<br> -->
+    
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{  request.build_absolute_uri }}/">
+        <i class="fa fa-facebook fa-2x" aria-hidden="true"></i>
+        </a>
+        <a href="https://twitter.com/home?status={{ instance.titulo|urlify }}{{  request.build_absolute_uri }}/">
+        <i class="fa fa-twitter fa-2x" aria-hidden="true"></i>
+        </a><br><br>
+        <div class="content-markdown">
+            {{ instance.contenido }}    
+        </div>
+         <br/><br>
+        
+        <div class="fb-comments" data-href="http://127.0.0.1:8000/posts" data-numposts="5"></div>
+        <hr>
+        <div class="fb-like" data-href="http://127.0.0.1:8000/posts" data-layout="standard" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+    </div>
+    
+
+{% endblock %}
+        
+
+
